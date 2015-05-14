@@ -1,0 +1,41 @@
+{
+  "name": "ready-mixin",
+  "version": "0.0.1",
+  "main": "./index.js",
+  "description": "Ready mixin for classes with async constructor",
+  "author": "Fomichev Kirill <fanatid@ya.ru>",
+  "repository": {
+    "url": "git://github.com/fanatid/ready-mixin",
+    "type": "git"
+  },
+  "bugs": {
+    "url": "https://github.com/fanatid/ready-mixin/issues"
+  },
+  "license": "MIT",
+  "keywords": [
+    "ready",
+    "mixin",
+    "promise"
+  ],
+  "files": [
+    "index.js",
+    "LICENSE",
+    "README.md"
+  ],
+  "dependencies": {},
+  "devDependencies": {
+    "bluebird": "^2.9.25",
+    "chai": "^2.3.0",
+    "coveralls": "^2.11.2",
+    "istanbul": "^0.3.14",
+    "mocha": "^2.2.4",
+    "standard": "^3.8.0"
+  },
+  "scripts": {
+    "coveralls": "npm run coverage && coveralls <coverage/lcov.info",
+    "coverage": "istanbul cover _mocha -- tests.js",
+    "lint": "standard",
+    "test": "npm run test:node",
+    "test:node": "istanbul test mocha -- --reporter spec tests.js"
+  }
+}
