@@ -5,7 +5,7 @@
 [![Dependency status](https://img.shields.io/david/fanatid/ready-mixin.svg?style=flat-square)](https://david-dm.org/fanatid/ready-mixin#info=dependencies)
 [![Dev Dependency status](https://img.shields.io/david/fanatid/ready-mixin.svg?style=flat-square)](https://david-dm.org/fanatid/ready-mixin#info=devDependencies)
 
-[![NPM](https://nodei.co/npm/ready-mixin.png)](https://www.npmjs.com/package/ready-mixin)
+[![NPM](https://nodei.co/npm/ready-mixin.png?downloads=true)](https://www.npmjs.com/package/ready-mixin)
 [![js-standard-style](https://cdn.rawgit.com/feross/standard/master/badge.svg)](https://github.com/feross/standard)
 
 You have class with async constructor and you don't want use callback in constructor or make inheritance from some event emitter? Try [ready-mixin](https://github.com/fanatid/ready-mixin)!
