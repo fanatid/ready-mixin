@@ -1,14 +1,13 @@
-/* global describe, beforeEach, afterEach, it */
-/* globals Promise:true */
+/* global describe, xdescribe, beforeEach, afterEach, it */
 var expect = require('chai').expect
-var Promise = require('bluebird')
+var bluebird = require('bluebird')
 
-var readyMixin = require('./index')(Promise)
+function runTests (Promise) {
+  function TestCls () {}
 
-function TestCls () {}
-readyMixin(TestCls.prototype)
+  var readyMixin = require('./index')(Promise)
+  readyMixin(TestCls.prototype)
 
-describe('readyMixin', function () {
   var tc
 
   beforeEach(function () {
@@ -25,7 +24,10 @@ describe('readyMixin', function () {
     })
 
     it('promise', function (done) {
-      tc.ready.asCallback(function (err, val) {
+      bluebird.try(function () {
+        return tc.ready
+      })
+      .asCallback(function (err, val) {
         expect(err).to.be.null
         expect(val).to.equal('mixin')
         done()
@@ -53,7 +55,10 @@ describe('readyMixin', function () {
     })
 
     it('promise', function (done) {
-      tc.ready.asCallback(function (err, val) {
+      bluebird.try(function () {
+        return tc.ready
+      })
+      .asCallback(function (err, val) {
         expect(err).to.be.instanceof(Error)
         expect(err.message).to.equal('mixin')
         done()
@@ -80,7 +85,7 @@ describe('readyMixin', function () {
       expect(tc.isReady()).to.be.true
     })
 
-    it('spread = true', function (done) {
+    it('spread is true', function (done) {
       tc.onReady(function (err, val1, val2) {
         expect(err).to.be.null
         expect(val1).to.equal(1)
@@ -89,7 +94,7 @@ describe('readyMixin', function () {
       }, {spread: true})
     })
 
-    it('spread = false', function (done) {
+    it('spread is false', function (done) {
       tc.onReady(function (err, val1, val2) {
         expect(err).to.be.null
         expect(val1).to.deep.equal([1, 2])
@@ -97,5 +102,23 @@ describe('readyMixin', function () {
         done()
       }, {spread: false})
     })
+  })
+}
+
+var promises = {
+  'Promise': (function () { try { return Promise } catch (err) { return } })(),
+  'bluebird': require('bluebird'),
+  // 'Q': require('q'),
+  'lie': require('lie'),
+  'es6-promise polyfill': require('es6-promise').Promise
+}
+
+Object.keys(promises).forEach(function (key) {
+  var kdescribe = promises[key] === undefined
+                    ? xdescribe
+                    : describe
+
+  kdescribe(key, function () {
+    runTests(promises[key])
   })
 })

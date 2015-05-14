@@ -1,6 +1,6 @@
 {
   "name": "ready-mixin",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "main": "./index.js",
   "description": "Ready mixin for classes with async constructor",
   "author": "Fomichev Kirill <fanatid@ya.ru>",
@@ -27,8 +27,11 @@
     "bluebird": "^2.9.25",
     "chai": "^2.3.0",
     "coveralls": "^2.11.2",
+    "es6-promise": "^2.1.1",
     "istanbul": "^0.3.14",
+    "lie": "^2.8.1",
     "mocha": "^2.2.4",
+    "q": "^1.4.0",
     "standard": "^3.8.0"
   },
   "scripts": {

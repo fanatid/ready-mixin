@@ -2,6 +2,7 @@ module.exports = function generator (Promise) {
   return function readyMixin (object) {
     object._initReadyPromise = function _initReadyPromise () {
       var self = this
+      self._isReady = false
       self._readyPromise = new Promise(function (resolve, reject) {
         self._readyResolve = resolve
         self._readyReject = reject
@@ -16,6 +17,8 @@ module.exports = function generator (Promise) {
       if (arguments.length > 0 && err !== null) {
         return this._readyReject(err)
       }
+
+      this._isReady = true
 
       if (arguments.length <= 2) {
         return this._readyResolve(arguments[1])
@@ -49,7 +52,7 @@ module.exports = function generator (Promise) {
     }
 
     object.isReady = function () {
-      return this.ready.isFulfilled()
+      return this._isReady || false
     }
   }
 }
