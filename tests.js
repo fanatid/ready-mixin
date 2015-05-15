@@ -7,11 +7,17 @@ function runTests (Promise) {
 
   var readyMixin = require('./index')(Promise)
   readyMixin(TestCls.prototype)
+  readyMixin.cachedValue = 'cached!'
 
   var tc
 
   beforeEach(function () {
     tc = new TestCls()
+  })
+
+  it('is cached?', function () {
+    var otherReadyMixin = require('./index')(Promise)
+    expect(otherReadyMixin.cachedValue).to.equal('cached!')
   })
 
   describe('success', function () {

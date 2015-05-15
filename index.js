@@ -1,4 +1,4 @@
-module.exports = function generator (Promise) {
+function getReadyMixin (Promise) {
   return function readyMixin (object) {
     object._initReadyPromise = function _initReadyPromise () {
       var self = this
@@ -55,4 +55,14 @@ module.exports = function generator (Promise) {
       return this._isReady || false
     }
   }
+}
+
+var readyMixins = {}
+
+module.exports = function generator (Promise) {
+  if (readyMixins[Promise] === undefined) {
+    readyMixins[Promise] = getReadyMixin(Promise)
+  }
+
+  return readyMixins[Promise]
 }
