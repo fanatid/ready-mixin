@@ -24,7 +24,12 @@ function getReadyMixin (Promise) {
         return this._readyResolve(arguments[1])
       }
 
-      this._readyResolve(Array.prototype.slice.call(arguments, 1))
+      var args = new Array(arguments.length - 1)
+      for (var i = 0; i < args.length; ++i) {
+        args[i] = arguments[i + 1]
+      }
+
+      this._readyResolve(args)
     }
 
     Object.defineProperty(object, 'ready', {

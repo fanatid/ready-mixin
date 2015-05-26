@@ -16,7 +16,7 @@ You have class with async constructor and you don't want use callback in constru
 npm install ready-mixin
 ```
 
-## Initializetion
+## Initialization
 
 Ready-mixin uses [promises](https://promisesaplus.com/) but doesn't have hard dependencies on the specific library.
 
