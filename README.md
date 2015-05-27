@@ -52,8 +52,8 @@ function User (userId) {
 
 readyMixin(User.prototype)
 
-var user = User(0)
-user.then(function () {
+var user = new User(0)
+user.ready.then(function () {
   console.log('user was loaded!')
 }, function (err) {
   console.log('error on loading user!', err)
