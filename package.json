@@ -1,6 +1,6 @@
 {
   "name": "ready-mixin",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "main": "./index.js",
   "description": "Ready mixin for classes with async constructor",
   "author": "Fomichev Kirill <fanatid@ya.ru>",
