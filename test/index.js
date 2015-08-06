@@ -1,23 +1,16 @@
-/* global describe, xdescribe, beforeEach, afterEach, it */
-var expect = require('chai').expect
-var bluebird = require('bluebird')
+import { expect } from 'chai'
+import bluebird from 'bluebird'
+
+import readyMixin from '../src'
 
 function runTests (Promise) {
   function TestCls () {}
-
-  var readyMixin = require('./index')(Promise)
-  readyMixin(TestCls.prototype)
-  readyMixin.cachedValue = 'cached!'
+  readyMixin(Promise)(TestCls.prototype)
 
   var tc
 
   beforeEach(function () {
     tc = new TestCls()
-  })
-
-  it('is cached?', function () {
-    var otherReadyMixin = require('./index')(Promise)
-    expect(otherReadyMixin.cachedValue).to.equal('cached!')
   })
 
   describe('success', function () {
@@ -64,7 +57,7 @@ function runTests (Promise) {
       bluebird.try(function () {
         return tc.ready
       })
-      .asCallback(function (err, val) {
+      .asCallback(function (err) {
         expect(err).to.be.instanceof(Error)
         expect(err.message).to.equal('mixin')
         done()
@@ -73,7 +66,7 @@ function runTests (Promise) {
     })
 
     it('callback', function (done) {
-      tc.onReady(function (err, val) {
+      tc.onReady(function (err) {
         expect(err).to.be.instanceof(Error)
         expect(err.message).to.equal('mixin')
         done()
@@ -84,7 +77,9 @@ function runTests (Promise) {
 
   describe('ready with few arguments', function () {
     beforeEach(function () {
+      expect(tc.isReady()).to.be.false
       tc._ready(null, 1, 2)
+      expect(tc.isReady()).to.be.true
     })
 
     afterEach(function () {
@@ -112,19 +107,12 @@ function runTests (Promise) {
 }
 
 var promises = {
-  'Promise': (function () { try { return Promise } catch (err) { return } })(),
+  'Promise': Promise,
   'bluebird': require('bluebird'),
   // 'Q': require('q'),
-  'lie': require('lie'),
-  'es6-promise polyfill': require('es6-promise').Promise
+  'lie': require('lie')
 }
 
-Object.keys(promises).forEach(function (key) {
-  var kdescribe = promises[key] === undefined
-                    ? xdescribe
-                    : describe
-
-  kdescribe(key, function () {
-    runTests(promises[key])
-  })
+Object.keys(promises).forEach((key) => {
+  describe(key, () => { runTests(promises[key]) })
 })
