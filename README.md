@@ -16,28 +16,40 @@ You have class with async constructor and you don't want use callback in constru
 npm install ready-mixin
 ```
 
-## Initialization
-
-Ready-mixin uses [promises](https://promisesaplus.com/) but doesn't have hard dependencies on the specific library.
-
-You can use [embedded promises](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise), [bluebird](https://github.com/petkaantonov/bluebird), [Q](https://github.com/kriskowal/q), [lie](https://github.com/calvinmetcalf/lie), [promise polyfill](https://github.com/jakearchibald/es6-promise) or [other promise library](https://www.npmjs.com/search?q=promises).
-
-All what you need just call module with specific promise object:
-
-```js
-var Promise = require('bluebird')
-var readyMixin = require('ready-mixin')(Promise)
-```
-
 ## API
 
 ### readyMixin(obj)
 
-After importing and generating `readyMixin` you can use it as mixin:
+Mixes readyMixin to obj.
+
+### readyMixin#_ready(err, ...)
+
+Resolve or reject ready promise.
+
+### readyMixin#ready
+
+Return ready promise.
+
+**return**: `Promise`
+
+### readyMixin#onReady(callback, opts)
+
+  * `function` callback is node-style callback function
+  * `Object` [opts]
+    * `boolean` [spread]
+
+### readyMixin#isReady()
+
+Return current ready status.
+
+**return**: `boolean`
+
+## Exaples
+
+###
 
 ```js
-var Promise = require('bluebird')
-var readyMixin = require('ready-mixin')(Promise)
+var readyMixin = require('ready-mixin')
 
 function User (userId) {
   var self = this
@@ -58,28 +70,12 @@ user.ready.then(function () {
 }, function (err) {
   console.log('error on loading user!', err)
 })
-
 ```
 
-### readyMixin#_ready(err, ...)
-
-Resolve or reject ready promise.
-
-### readyMixin#ready
-
-**return**: `Promise`
-
-Return ready promise.
-
-### readyMixin#onReady(callback, opts)
-
-`callback` is node-style callback function
-
-`opts` now uses only for `{spread: boolean}`:
+### spread in onReady
 
 ```js
-var Promise = require('bluebird')
-var readyMixin = require('ready-mixin')(Promise)
+var readyMixin = require('ready-mixin')
 
 function A () {
   var self = this
@@ -96,12 +92,6 @@ a.onReady(function (err, v1, v2, v3) {
 }, {spread: true})
 ```
 
-### readyMixin#isReady()
-
-**return**: `boolean`
-
-Return current ready status.
-
 ## License
 
-Code released under [the MIT license](https://github.com/fanatid/ready-mixin/blob/master/LICENSE).
+Code released under [the MIT license](LICENSE).

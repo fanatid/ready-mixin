@@ -1,11 +1,10 @@
 import { expect } from 'chai'
-import bluebird from 'bluebird'
 
 import readyMixin from '../src'
 
 function runTests (Promise) {
   function TestCls () {}
-  readyMixin(Promise)(TestCls.prototype)
+  readyMixin(TestCls.prototype)
 
   var tc
 
@@ -23,14 +22,12 @@ function runTests (Promise) {
     })
 
     it('promise', function (done) {
-      bluebird.try(function () {
-        return tc.ready
-      })
-      .asCallback(function (err, val) {
-        expect(err).to.be.null
-        expect(val).to.equal('mixin')
-        done()
-      })
+      tc.ready
+        .then((val) => {
+          expect(val).to.equal('mixin')
+        })
+        .then(done, done)
+
       tc._ready(null, 'mixin')
     })
 
@@ -40,6 +37,7 @@ function runTests (Promise) {
         expect(val).to.equal('mixin')
         done()
       })
+
       tc._ready(null, 'mixin')
     })
   })
@@ -54,15 +52,15 @@ function runTests (Promise) {
     })
 
     it('promise', function (done) {
-      bluebird.try(function () {
-        return tc.ready
-      })
-      .asCallback(function (err) {
-        expect(err).to.be.instanceof(Error)
-        expect(err.message).to.equal('mixin')
-        done()
-      })
-      tc._ready(new Error('mixin'))
+      tc.ready
+        .then(() => { throw new Error('false') })
+        .catch((err) => {
+          expect(err).to.be.instanceof(Error)
+          expect(err.message).to.equal('true')
+        })
+        .then(done, done)
+
+      tc._ready(new Error('true'))
     })
 
     it('callback', function (done) {
@@ -71,6 +69,7 @@ function runTests (Promise) {
         expect(err.message).to.equal('mixin')
         done()
       })
+
       tc._ready(new Error('mixin'))
     })
   })
@@ -113,6 +112,6 @@ var promises = {
   'lie': require('lie')
 }
 
-Object.keys(promises).forEach((key) => {
+for (let key of Object.keys(promises)) {
   describe(key, () => { runTests(promises[key]) })
-})
+}
