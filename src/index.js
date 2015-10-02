@@ -1,14 +1,14 @@
-export default function (object) {
-  object._readyMixinInitialize = function () {
+export default {
+  _readyMixinInitialize () {
     this._readyMixinState = {
       status: null,
       reason: null,
       value: null,
       promises: []
     }
-  }
+  },
 
-  object._ready = function (err, ...args) {
+  _ready (err, ...args) {
     // initialize if not yet
     if (this._readyMixinState === undefined) {
       this._readyMixinInitialize()
@@ -37,38 +37,34 @@ export default function (object) {
       promise.resolve(this._readyMixinState.value)
     }
     this._readyMixinState.promises = []
-  }
+  },
 
-  Object.defineProperty(object, 'ready', {
-    configurable: true,
-    enumerable: true,
-    get: function () {
-      // initialize if not yet
-      if (this._readyMixinState === undefined) {
-        this._readyMixinInitialize()
-      }
-
-      // already resolved
-      if (this._readyMixinState.status === 'resolve') {
-        return Promise.resolve(this._readyMixinState.value)
-      }
-
-      // already rejected
-      if (this._readyMixinState.status === 'reject') {
-        return Promise.reject(this._readyMixinState.reason)
-      }
-
-      // create and save new promise
-      return new Promise((resolve, reject) => {
-        this._readyMixinState.promises.push({
-          resolve: resolve,
-          reject: reject
-        })
-      })
+  get ready () {
+    // initialize if not yet
+    if (this._readyMixinState === undefined) {
+      this._readyMixinInitialize()
     }
-  })
 
-  object.onReady = function (callback, opts) {
+    // already resolved
+    if (this._readyMixinState.status === 'resolve') {
+      return Promise.resolve(this._readyMixinState.value)
+    }
+
+    // already rejected
+    if (this._readyMixinState.status === 'reject') {
+      return Promise.reject(this._readyMixinState.reason)
+    }
+
+    // create and save new promise
+    return new Promise((resolve, reject) => {
+      this._readyMixinState.promises.push({
+        resolve: resolve,
+        reject: reject
+      })
+    })
+  },
+
+  onReady (callback, opts) {
     function onResolve (value) {
       // resolve with few values
       if (Object(opts).spread) {
@@ -80,9 +76,9 @@ export default function (object) {
     }
 
     return this.ready.then(onResolve, (err) => { callback(err) })
-  }
+  },
 
-  object.isReady = function () {
+  isReady () {
     let state = this._readyMixinState
     return state && state.status === 'resolve' || false
   }

@@ -1,12 +1,14 @@
 import { expect } from 'chai'
+import { mixin } from 'core-decorators'
 
-import readyMixin from '../src'
+import ReadyMixin from '../src'
 
 function runTests (Promise) {
-  class TestCls {}
-  readyMixin(TestCls.prototype)
-
   let tc
+
+  @mixin(ReadyMixin)
+  class TestCls {}
+
   beforeEach(() => {
     tc = new TestCls()
   })

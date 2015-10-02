@@ -18,77 +18,74 @@ npm install ready-mixin
 
 ## API
 
-### readyMixin(obj)
-
-Mixes readyMixin to obj.
-
-### readyMixin#_ready(err, ...)
+### _ready(err, ...)
 
 Resolve or reject ready promise.
 
-### readyMixin#ready
+### ready()
 
 Return ready promise.
 
 **return**: `Promise`
 
-### readyMixin#onReady(callback, opts)
+### onReady(callback, opts)
 
   * `function` callback is node-style callback function
   * `Object` [opts]
     * `boolean` [spread]
 
-### readyMixin#isReady()
+### isReady()
 
 Return current ready status.
 
 **return**: `boolean`
 
-## Exaples
+## Examples
 
 ###
 
 ```js
-var readyMixin = require('ready-mixin')
+import { mixin } from 'core-decorators'
+import ReadyMixin from 'ready-mixin'
 
-function User (userId) {
-  var self = this
-  db.load(userId, function (err, data) {
-    if (err === null) {
-      self._data = data
-    }
+@mixin(ReadyMixin)
+class User {
+  constructor (userId) {
+    db.load(userId, (err, data) => {
+      if (err === null) {
+        this._data = data
+      }
 
-    self._ready(err)
-  })
+      this._ready(err)
+    })
+  }
 }
 
-readyMixin(User.prototype)
-
-var user = new User(0)
-user.ready.then(function () {
-  console.log('user was loaded!')
-}, function (err) {
-  console.log('error on loading user!', err)
-})
+let user = new User(0)
+user.ready
+  .then(() => {
+    console.log('user was loaded!')
+  }, (err) => {
+    console.log('error on loading user!', err)
+  })
 ```
 
 ### spread in onReady
 
 ```js
-var readyMixin = require('ready-mixin')
+import { mixin } from 'core-decorators'
+import ReadyMixin from 'ready-mixin'
 
-function A () {
-  var self = this
-  setTimeout(function () {
-    self._ready(null, 1, 2, 3)
-  }, 1000)
+@mixin(ReadyMixin)
+class A {
+  constructor () {
+    setTimeout(() => { this._ready(null, 1, 2, 3) }, 1000)
+  }
 }
 
-readyMixin(A)
-
-var a = new A()
-a.onReady(function (err, v1, v2, v3) {
-  console.log('Sum:', v1 + v2 + v3) // Sum: 6
+let a = new A()
+a.onReady((err, v1, v2, v3) => {
+  console.log(`Sum: ${v1 + v2 + v3}`) // Sum: 6
 }, {spread: true})
 ```
 
